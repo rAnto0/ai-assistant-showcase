@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16.13-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+ 
+  qdrant:
+    image: qdrant/qdrant:v1.17.1-unprivileged
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env.prod
+    volumes:
+      - /data:/data
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    command: uv run uvicorn main:app --host 0.0.0.0 --port 8000
+    healthcheck:
+      test: [ "CMD-SHELL", "python3 -c \"import socket; s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1',8000)); s.close()\"" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+ 
+volumes:
+  postgres_data:
+  qdrant_data:
