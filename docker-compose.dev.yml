@@ -13,6 +13,14 @@ services:
       - .env.dev
     ports:
       - "8000:8000"
+    environment:
+      RUFF_CACHE_DIR: /tmp/ruff-cache
+      PYTHONPYCACHEPREFIX: /tmp/pycache
+      UV_LINK_MODE: copy
     volumes:
       - ./backend:/app
+      - backend_venv:/app/.venv
     command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  backend_venv:
