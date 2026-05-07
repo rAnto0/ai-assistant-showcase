@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     CHAT_HISTORY_WINDOW: int = 10
     RAG_TOP_K: int = 5
 
+    SQL_DEBUG: bool = False
+    LOG_LEVEL: str = "INFO"
+    SERVICE_NAME: str = "ai-assistant-showcase"
+
     TEST_POSTGRES_DB: str | None = None
 
     @property
