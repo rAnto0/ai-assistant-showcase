@@ -33,12 +33,6 @@ def test_settings_builds_postgres_async_dsn():
     assert settings.postgres_async_dsn == "postgresql+asyncpg://user:password@postgres:5432/app"
 
 
-def test_settings_builds_postgres_sync_dsn():
-    settings = make_settings()
-
-    assert settings.postgres_sync_dsn == "postgresql+psycopg2://user:password@postgres:5432/app"
-
-
 def test_settings_builds_default_test_postgres_dsn():
     settings = make_settings()
 

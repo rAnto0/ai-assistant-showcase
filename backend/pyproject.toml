@@ -10,7 +10,6 @@ dependencies = [
     "sqlalchemy[asyncio]",
     "alembic",
     "asyncpg[binary]",
-    "psycopg2-binary",
     "pydantic-settings",
     "python-multipart",
 ]
@@ -41,5 +40,16 @@ select = ["E", "F", "I"]
 "tests/conftest.py" = ["F403"]
 
 [tool.alembic]
-script_location = "alembic"
-prepend_sys_path = ["."]
+script_location = "%(here)s/alembic"
+prepend_sys_path = [
+    "."
+]
+timezone = "UTC"
+output_encoding = "utf-8"
+
+# [[tool.alembic.post_write_hooks]]
+# lint with attempts to fix using "ruff" - use the module runner, against the "ruff" module
+# name = "ruff"
+# type = "module"
+# module = "ruff"
+# options = "check --fix REVISION_SCRIPT_FILENAME"

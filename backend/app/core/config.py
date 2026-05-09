@@ -40,13 +40,6 @@ class Settings(BaseSettings):
         )
 
     @property
-    def postgres_sync_dsn(self) -> str:
-        return (
-            f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
-
-    @property
     def postgres_test_dsn(self) -> str:
         test_db = self.TEST_POSTGRES_DB or f"{self.POSTGRES_DB}_test"
         return (

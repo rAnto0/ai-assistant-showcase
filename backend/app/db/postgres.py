@@ -1,6 +1,7 @@
 import logging
 from typing import AsyncGenerator
 
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -13,9 +14,17 @@ from app.core.config import get_settings
 
 logger = logging.getLogger("app.db.postgres")
 
+convention = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s",
+}
+
 
 class Base(DeclarativeBase):
-    pass
+    metadata = MetaData(naming_convention=convention)
 
 
 engine: AsyncEngine | None = None
@@ -58,8 +67,3 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
             await session.rollback()
             logger.exception("Session error")
             raise
-
-
-# Гарантируем, что все модели будут импортированы и промаппированы
-# до того, как кто-то запросит metadata или создаст миграции
-import app.db.models  # noqa: F401, E402
