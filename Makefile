@@ -1,12 +1,14 @@
 COMPOSE_DEV = docker compose --env-file .env.dev -f docker-compose.yml -f docker-compose.dev.yml
 PYTEST_ARGS ?= -q --disable-warnings -r fE
+M ?= migration
+REV ?= -1
 ifneq (,$(wildcard .env.dev))
 include .env.dev
 export
 endif
 TEST_POSTGRES_DB ?= $(POSTGRES_DB)_test
 
-.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate lint lint-fix format format-check check
+.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check
 
 # =======
 # HELPERS
@@ -43,8 +45,26 @@ compose-dev-command:
 env-init:
 	./scripts/init-env.sh
 
-migrate:
-	$(COMPOSE_DEV) exec -T backend uv run alembic -c alembic.ini upgrade head
+# =================
+# DATABASE COMMANDS
+# =================
+migration:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml revision --autogenerate -m "$(M)"
+
+migrate-head:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml upgrade head
+
+migrate-check:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml check
+
+migration-empty:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml revision -m "$(M)"
+
+migrate-down:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml downgrade $(REV)
+
+migrate-current:
+	$(COMPOSE_DEV) exec -T backend uv run alembic -c pyproject.toml current
 
 # =============
 # TEST COMMANDS
