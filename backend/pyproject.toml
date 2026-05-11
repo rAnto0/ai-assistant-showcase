@@ -12,10 +12,21 @@ dependencies = [
     "asyncpg[binary]",
     "pydantic-settings",
     "python-multipart",
+    "qdrant-client>=1.17.1",
+    "sentence-transformers>=5.4.1",
+    "torch>=2.11.0",
 ]
 
 [project.optional-dependencies]
 dev = ["pytest", "pytest-cov", "pytest-asyncio", "httpx", "ruff", "faker"]
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
