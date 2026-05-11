@@ -44,11 +44,11 @@
   panel.innerHTML = `
     <header class="aiw-header">
       <h2 class="aiw-title">AI-ассистент</h2>
-      <p class="aiw-subtitle">Отвечает по demo-каталогу и помогает подобрать продукт.</p>
+      <p class="aiw-subtitle">Помогает подобрать юридическую услугу, тариф или консультацию.</p>
     </header>
     <div class="aiw-messages" aria-live="polite"></div>
     <form class="aiw-form">
-      <input class="aiw-input" name="message" autocomplete="off" placeholder="Спросите про тарифы..." />
+      <input class="aiw-input" name="message" autocomplete="off" placeholder="Спросите про договор, тариф или консультацию..." />
       <button class="aiw-send" type="submit">Отправить</button>
     </form>
   `;
@@ -80,7 +80,7 @@
     isOpen = !isOpen;
     panel.dataset.open = String(isOpen);
     if (isOpen && messages.childElementCount === 0) {
-      addMessage("Здравствуйте. Спросите меня про продукты, тарифы или интеграцию.", "bot");
+      addMessage("Здравствуйте. Я помогу подобрать юридическую услугу, тариф или консультацию по каталогу компании.", "bot");
       input.focus();
     }
   });
