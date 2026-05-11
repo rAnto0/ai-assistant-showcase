@@ -8,7 +8,7 @@ export
 endif
 TEST_POSTGRES_DB ?= $(POSTGRES_DB)_test
 
-.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check
+.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check import-catalog-csv
 
 # =======
 # HELPERS
@@ -38,6 +38,9 @@ shell-service-dev:
 
 compose-dev-command:
 	$(COMPOSE_DEV) $(COMMAND)
+
+import-catalog-csv:
+	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.import_catalog
 
 # =======
 # SCRIPTS
