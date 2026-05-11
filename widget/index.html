@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Assistant Showcase Widget Demo</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #172033;
+        background: radial-gradient(circle at top left, #dbeafe, transparent 34%), #f8fafc;
+      }
+
+      main {
+        max-width: 860px;
+        padding: 72px 24px;
+      }
+
+      h1 {
+        max-width: 680px;
+        margin: 0 0 16px;
+        font-size: clamp(36px, 8vw, 76px);
+        line-height: 0.92;
+        letter-spacing: -0.06em;
+      }
+
+      p {
+        max-width: 620px;
+        margin: 0;
+        color: #475569;
+        font-size: 20px;
+        line-height: 1.55;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Demo AI-ассистент для B2B каталога</h1>
+      <p>
+        Откройте чат в правом нижнем углу и спросите про тарифы, Telegram-бота, виджет или импорт CSV.
+      </p>
+    </main>
+    <script src="./widget.js" data-api-url="http://localhost:8000" data-tenant-slug="demo"></script>
+  </body>
+</html>
