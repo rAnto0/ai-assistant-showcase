@@ -3,12 +3,15 @@ from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 
 from app.core.dependencies import DBSession
 from app.core.logging import setup_logging
 from app.db.postgres import dispose_engine, init_engine
+from app.modules.chat.router import router as chat_router
+from app.modules.rag.embedder import embed_chunks
 
 setup_logging()
 logger = logging.getLogger("app.main")
@@ -29,6 +32,14 @@ async def lifespan(_: FastAPI) -> AsyncGenerator[None, None]:
 
 
 app = FastAPI(title="Ai Assistant Showcase API", lifespan=lifespan)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+app.include_router(chat_router, prefix="/api/chat", tags=["chat"])
 
 
 @app.get("/")
