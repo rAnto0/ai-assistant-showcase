@@ -8,7 +8,7 @@ export
 endif
 TEST_POSTGRES_DB ?= $(POSTGRES_DB)_test
 
-.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check import-catalog-csv
+.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check import-catalog-csv warmup-dev run-telegram-dev down-telegram-dev
 
 # =======
 # HELPERS
@@ -41,6 +41,15 @@ compose-dev-command:
 
 import-catalog-csv:
 	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.import_catalog
+
+warmup-dev:
+	curl -fsS -X POST http://localhost:8000/internal/warmup
+
+run-telegram-dev:
+	$(COMPOSE_DEV) --profile telegram up -d telegram
+
+down-telegram-dev:
+	$(COMPOSE_DEV) --profile telegram down $(ARGS)
 
 # =======
 # SCRIPTS

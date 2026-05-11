@@ -36,6 +36,23 @@ async def test_health_returns_error_when_database_fails(async_client: AsyncClien
     assert response.json() == {"status": "error"}
 
 
+async def test_warmup_preloads_embedding_model(async_client: AsyncClient, monkeypatch):
+    called = {"embed": False}
+
+    async def fake_embed_chunks(texts):
+        called["embed"] = True
+        assert texts == ["warmup"]
+        return [[0.1, 0.2]]
+
+    monkeypatch.setattr("app.main.embed_chunks", fake_embed_chunks)
+
+    response = await async_client.post("/internal/warmup")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
+    assert called["embed"] is True
+
+
 async def test_lifespan_initializes_and_disposes_dependencies(monkeypatch):
     called = {"init": False, "dispose": False}
 

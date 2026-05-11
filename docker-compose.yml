@@ -44,6 +44,23 @@ services:
       timeout: 5s
       retries: 3
     restart: unless-stopped
+
+  telegram:
+    build:
+      context: ./backend
+    profiles:
+      - telegram
+    env_file:
+      - .env.prod
+    volumes:
+      - ./data:/data:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    command: uv run python -m app.commands.run_telegram
+    restart: unless-stopped
  
 volumes:
   postgres_data:

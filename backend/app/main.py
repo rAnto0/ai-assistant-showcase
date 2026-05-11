@@ -58,3 +58,9 @@ async def health(session: DBSession):
     if not db_ok:
         return JSONResponse(status_code=503, content={"status": "error"})
     return {"status": "ok"}
+
+
+@app.post("/internal/warmup")
+async def warmup():
+    await embed_chunks(["warmup"])
+    return {"status": "ok"}
