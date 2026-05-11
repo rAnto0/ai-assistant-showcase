@@ -8,7 +8,7 @@ export
 endif
 TEST_POSTGRES_DB ?= $(POSTGRES_DB)_test
 
-.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check import-catalog-csv warmup-dev run-telegram-dev down-telegram-dev
+.PHONY: run-dev down-dev build-dev logs-dev shell-service-dev compose-dev-command test test-db env-init migrate-head migration migrate-check migration-empty migrate-down migrate-current lint lint-fix format format-check check import-catalog-csv clear-qdrant clear-postgres warmup-dev run-telegram-dev down-telegram-dev
 
 # =======
 # HELPERS
@@ -40,7 +40,13 @@ compose-dev-command:
 	$(COMPOSE_DEV) $(COMMAND)
 
 import-catalog-csv:
-	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.import_catalog
+	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.import_catalog $(ARGS)
+
+clear-qdrant:
+	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.clear_qdrant --tenant-slug $(or $(TENANT_SLUG),demo)
+
+clear-postgres:
+	$(COMPOSE_DEV) exec -T backend uv run python -m app.commands.clear_postgres --tenant-slug $(or $(TENANT_SLUG),demo)
 
 warmup-dev:
 	curl -fsS -X POST http://localhost:8000/internal/warmup
