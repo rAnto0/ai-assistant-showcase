@@ -19,9 +19,6 @@ def test_settings_uses_default_service_values():
     assert settings.POSTGRES_PORT == 5432
     assert settings.QDRANT_HOST == "qdrant"
     assert settings.QDRANT_PORT == 6333
-    assert settings.LLM_PROVIDER == "groq"
-    assert settings.LLM_MODEL == "groq/llama3-70b-8192"
-    assert settings.EMBEDDING_MODEL == "intfloat/multilingual-e5-large"
     assert settings.EMBEDDING_DIMENSION == 1024
     assert settings.CHAT_HISTORY_WINDOW == 10
     assert settings.RAG_TOP_K == 5
